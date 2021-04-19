@@ -6,9 +6,7 @@ import {
   TouchableOpacity,
   Text,
   ImageBackground,
-  Image,
-  Alert,
-  KeyboardAvoidingView
+  Image
 } from "react-native";
 import * as Permissions from "expo-permissions";
 import { BarCodeScanner } from "expo-barcode-scanner";
@@ -95,7 +93,7 @@ export default class TransactionScreen extends Component {
       );
     }
     return (
-      <KeyboardAvoidingView behavior="padding" style={styles.container}>
+      <View style={styles.container}>
         <ImageBackground source={bgImage} style={styles.bgImage}>
           <View style={styles.upperContainer}>
             <Image source={appIcon} style={styles.appIcon} />
@@ -138,7 +136,7 @@ export default class TransactionScreen extends Component {
             </TouchableOpacity>
           </View>
         </ImageBackground>
-      </KeyboardAvoidingView>
+      </View>
     );
   }
 }
