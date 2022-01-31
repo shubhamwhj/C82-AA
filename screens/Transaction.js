@@ -1,4 +1,3 @@
-
 import React, { Component } from "react";
 import {
   View,
@@ -12,8 +11,10 @@ import {
 import * as Permissions from "expo-permissions";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import db from "../config";
-const bgImage = require("../assets/background2.png");
 
+const bgImage = require("../assets/background2.png");
+const appIcon = require("../assets/appIcon.png");
+const appName = require("../assets/appName.png");
 
 export default class TransactionScreen extends Component {
   constructor(props) {
@@ -80,6 +81,7 @@ export default class TransactionScreen extends Component {
   initiateBookReturn = () => {
     console.log("Book returned to the library!");
   };
+
   render() {
     const { bookId, studentId, domState, scanned } = this.state;
     if (domState !== "normal") {
@@ -93,7 +95,10 @@ export default class TransactionScreen extends Component {
     return (
       <View style={styles.container}>
         <ImageBackground source={bgImage} style={styles.bgImage}>
-          
+          <View style={styles.upperContainer}>
+            <Image source={appIcon} style={styles.appIcon} />
+            <Image source={appName} style={styles.appName} />
+          </View>
           <View style={styles.lowerContainer}>
             <View style={styles.textinputContainer}>
               <TextInput
@@ -124,10 +129,11 @@ export default class TransactionScreen extends Component {
               </TouchableOpacity>
             </View>
             <TouchableOpacity
-             style={[styles.button, { marginTop: 25 }]}
-           >
-             <Text style={styles.buttonText}>Submit</Text>
-           </TouchableOpacity>
+              style={[styles.button, { marginTop: 25 }]}
+              onPress={this.handleTransaction}
+            >
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
           </View>
         </ImageBackground>
       </View>
@@ -145,7 +151,22 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     justifyContent: "center"
   },
- 
+  upperContainer: {
+    flex: 0.5,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  appIcon: {
+    width: 200,
+    height: 200,
+    resizeMode: "contain",
+    marginTop: 80
+  },
+  appName: {
+    width: 80,
+    height: 80,
+    resizeMode: "contain"
+  },
   lowerContainer: {
     flex: 0.5,
     alignItems: "center"
@@ -180,7 +201,8 @@ const styles = StyleSheet.create({
   scanbuttonText: {
     fontSize: 24,
     color: "#0A0101",
-  },button: {
+  },
+  button: {
     width: "43%",
     height: 55,
     justifyContent: "center",
@@ -191,7 +213,6 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 24,
     color: "#FFFFFF",
+    
   }
- 
- 
 });
