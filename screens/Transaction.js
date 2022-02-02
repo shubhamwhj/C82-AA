@@ -126,6 +126,27 @@ export default class TransactionScreen extends Component {
       });
   };
 
+  checkBookAvailability = async bookId => {
+    const bookRef = await db
+      .collection("books")
+      .where("book_id", "==", bookId)
+      .get();
+
+    var transactionType = "";
+    if (bookRef.docs.length == 0) {
+      transactionType = false;
+    } else {
+      bookRef.docs.map(doc => {
+        //if the book is available then transaction type will be issue
+        // otherwise it will be return
+        transactionType = doc.data().is_book_available ? "issue" : "return";
+      });
+    }
+
+    return transactionType;
+  };
+  
+  
   initiateBookIssue = async (bookId, studentId, bookName, studentName) => {
     //add a transaction
     db.collection("transactions").add({
