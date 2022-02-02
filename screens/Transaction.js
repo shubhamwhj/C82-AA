@@ -70,12 +70,15 @@ export default class TransactionScreen extends Component {
     await this.getBookDetails(bookId);
     await this.getStudentDetails(studentId);
 
-    db.collection("books")
-      .doc(bookId)
-      .get()
-      .then(doc => {
-        var book = doc.data();
-        if (book.is_book_available) {
+    var transactionType = await this.checkBookAvailability(bookId);
+    
+         if (!transactionType) {
+      this.setState({ bookId: "", studentId: "" });
+      // For Android users only
+      // ToastAndroid.show("The book doesn't exist in the library database!", ToastAndroid.SHORT);
+      Alert.alert("The book doesn't exist in the library database!");
+    } 
+    else if (transactionType === "issue") {
           var { bookName, studentName } = this.state;
           this.initiateBookIssue(bookId, studentId, bookName, studentName);
 
