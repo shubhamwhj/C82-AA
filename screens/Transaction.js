@@ -98,7 +98,7 @@ export default class TransactionScreen extends Component {
 
           Alert.alert("Book returned to the library!");
         }
-      });
+      
   };
 
   getBookDetails = bookId => {
