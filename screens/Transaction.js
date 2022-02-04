@@ -79,25 +79,33 @@ export default class TransactionScreen extends Component {
       Alert.alert("The book doesn't exist in the library database!");
     } 
     else if (transactionType === "issue") {
-          var { bookName, studentName } = this.state;
-          this.initiateBookIssue(bookId, studentId, bookName, studentName);
+           var isEligible = await this.checkStudentEligibilityForBookIssue(
+        studentId
+      );
 
-          // For Android users only
-         // ToastAndroid.show("Book issued to the student!", ToastAndroid.SHORT);
-
-           Alert.alert("Book issued to the student!");
+      if (isEligible) {
+        var { bookName, studentName } = this.state;
+        this.initiateBookIssue(bookId, studentId, bookName, studentName);
+        // For Android users only
+      // ToastAndroid.show("Book issued to the student!", ToastAndroid.SHORT);
+      Alert.alert("Book issued to the student!");
+      }
+      
         } else {
-          var { bookName, studentName } = this.state;
-          this.initiateBookReturn(bookId, studentId, bookName, studentName);
+         var isEligible = await this.checkStudentEligibilityForBookReturn(
+        bookId,
+        studentId
+      );
 
-          // For Android users only
-       /*   ToastAndroid.show(
-            "Book returned to the library!",
-            ToastAndroid.SHORT
-          );*/
-
-          Alert.alert("Book returned to the library!");
-        }
+      if (isEligible) {
+        var { bookName, studentName } = this.state;
+        this.initiateBookReturn(bookId, studentId, bookName, studentName);
+        
+       // For Android users only
+       // ToastAndroid.show("Book returned to the library!", ToastAndroid.SHORT);
+       Alert.alert("Book returned to the library!");
+      }
+    }
       
   };
 
@@ -148,6 +156,47 @@ export default class TransactionScreen extends Component {
 
     return transactionType;
   };
+  
+  checkStudentEligibilityForBookIssue = async studentId => {
+    const studentRef = await db
+      .collection("students")
+      .where("student_id", "==", studentId)
+      .get();
+
+    var isStudentEligible = "";
+    if (studentRef.docs.length == 0) {
+      this.setState({
+        bookId: "",
+        studentId: ""
+      });
+      isStudentEligible = false;
+      Alert.alert("The student id doesn't exist in the database!");
+    } else {
+      studentRef.docs.map(doc => {
+        if (doc.data().number_of_books_issued < 2) {
+          isStudentEligible = true;
+        } else {
+          isStudentEligible = false;
+          Alert.alert("The student has already issued 2 books!");
+          this.setState({
+            bookId: "",
+            studentId: ""
+          });
+        }
+      });
+    }
+
+    return isStudentEligible;
+  };
+  
+  
+  checkStudentEligibilityForBookReturn = async (bookId, studentId) => {
+    
+    var isStudentEligible = "";
+    
+    return isStudentEligible;
+  };
+  
   
   
   initiateBookIssue = async (bookId, studentId, bookName, studentName) => {
