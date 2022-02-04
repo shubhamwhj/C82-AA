@@ -173,11 +173,11 @@ export default class TransactionScreen extends Component {
       Alert.alert("The student id doesn't exist in the database!");
     } else {
       studentRef.docs.map(doc => {
-        if (doc.data().number_of_books_issued < 2) {
+        if (doc.data().number_of_books_issued < 5) {
           isStudentEligible = true;
         } else {
           isStudentEligible = false;
-          Alert.alert("The student has already issued 2 books!");
+          Alert.alert("The student can't be given more than 5 books");
           this.setState({
             bookId: "",
             studentId: ""
